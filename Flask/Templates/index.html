@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Failure Prediction</title>
+    <style>
+        body {
+            background-image: url("/static/Heart.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 4mm;
+            border-radius: 300px;
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+        }
+
+
+        input[type="number"], input[type="radio"] {
+            width: 70%;
+            height: 7mm;
+            margin-bottom: 6px;
+        }
+
+        button {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+        }
+
+        .radio-label {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 2%;
+        }
+
+        td.left-column {
+            padding-right: 10px;
+        }
+        
+        td.right-column {
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body onload="clearInputs()">
+    <div class="container">
+        <h1>Heart Failure Prediction</h1>
+        <form action="/predict" method="post">
+            <table>
+                <tr>
+                    <td class="left-column"><label for="age">Age:</label></td>
+                    <td class="left-column"><input type="number" id="age" name="age" min="40" step="any" value="{{ request.form['age'] if request.method == 'POST' else '' }}" required></td>
+                    <td class="right-column"><label for="platelets">Platelets:</label></td>
+                    <td class="right-column"><input type="number" id="platelets" name="platelets" min="0" step="any" value="{{ request.form['platelets'] if request.method == 'POST' else '' }}" required></td>
+                </tr>
+
+                <tr>
+                    <td class="left-column"><label for="anaemia">Anaemia:</label></td>
+                    <td class="radio-label">
+                        <input type="radio" id="anaemia_no" name="anaemia" value="0" {% if request.method == 'POST' and request.form.get('anaemia') == '0' %} checked {% endif %} required>
+                        <label for="anaemia_no">No</label>
+                        <input type="radio" id="anaemia_yes" name="anaemia" value="1" {% if request.method == 'POST' and request.form.get('anaemia') == '1' %} checked {% endif %} required>
+                        <label for="anaemia_yes">Yes</label>
+                    </td>
+                    <td class="right-column"><label for="serum_creatinine">Serum Creatinine:</label></td>
+                    <td class="right-column"><input type="number" id="serum_creatinine" name="serum_creatinine" min="0" step="any" value="{{ request.form['serum_creatinine'] if request.method == 'POST' else '' }}" required>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="left-column"><label for="creatinine_phosphokinase">Creatinine Phosphokinase:</label></td>
+                    <td class="left-column"><input type="number" id="creatinine_phosphokinase" name="creatinine_phosphokinase" min="0" step="any" value="{{ request.form['creatinine_phosphokinase'] if request.method == 'POST' else '' }}" required></td>
+                    <td class="right-column"><label for="serum_sodium">Serum Sodium:</label></td>
+                    <td class="right-column"><input type="number" id="serum_sodium" name="serum_sodium" min="0" step="any" value="{{ request.form['serum_sodium'] if request.method == 'POST' else '' }}" required></td>
+                </tr>
+
+                <tr>
+                    <td class="left-column"><label for="diabetes">Diabetes:</label></td>
+                    <td class="radio-label">
+                        <input type="radio" id="diabetes_no" name="diabetes" value="0" {% if request.method == 'POST' and request.form.get('diabetes') == '0' %} checked {% endif %} required>
+                        <label for="diabetes_no">No</label>
+                        <input type="radio" id="diabetes_yes" name="diabetes" value="1" {% if request.method == 'POST' and request.form.get('diabetes') == '1' %} checked {% endif %} required>
+                        <label for="diabetes_yes">Yes</label>
+                    </td>
+                    <td class="right-column"><label for="sex">Sex:</label></td>
+                    <td class="radio-label">
+                        <input type="radio" id="sex_female" name="sex" value="0" {% if request.method == 'POST' and request.form.get('sex') == '0' %} checked {% endif %} required>
+                        <label for="sex_female">Female</label>
+                        <input type="radio" id="sex_male" name="sex" value="1" {% if request.method == 'POST' and request.form.get('sex') == '1' %} checked {% endif %} required>
+                        <label for="sex_male">Male</label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="left-column"><label for="ejection_fraction">Ejection Fraction:</label></td>
+                    <td class="left-column"><input type="number" id="ejection_fraction" name="ejection_fraction" min="0" max="100" step="any" value="{{ request.form['ejection_fraction'] if request.method == 'POST' else '' }}" required>
+                    </td>
+                    <td class="right-column"><label for="smoking">Smoking:</label></td>
+                    <td class="radio-label">
+                        <input type="radio" id="smoking_no" name="smoking" value="0" {% if request.method == 'POST' and request.form.get('smoking') == '0' %} checked {% endif %} required>
+                        <label for="smoking_no">No</label>
+                        <input type="radio" id="smoking_yes" name="smoking" value="1" {% if request.method == 'POST' and request.form.get('smoking') == '1' %} checked {% endif %} required>
+                        <label for="smoking_yes">Yes</label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="left-column"><label for="high_blood_pressure">High Blood Pressure:</label></td>
+                    <td class="radio-label">
+                        <input type="radio" id="high_blood_pressure_no" name="high_blood_pressure" value="0" {% if request.method == 'POST' and request.form.get('high_blood_pressure') == '0' %} checked {% endif %} required>
+                        <label for="high_blood_pressure_no">No</label>
+                        <input type="radio" id="high_blood_pressure_yes" name="high_blood_pressure" value="1" {% if request.method == 'POST' and request.form.get('high_blood_pressure') == '1' %} checked {% endif %} required>
+                        <label for="high_blood_pressure_yes">Yes</label>
+                    </td>
+                    <td class="right-column"><label for="time">Time:</label></td>
+                    <td class="right-column"><input type="number" id="time" name="time" min="0" step="any" value="{{ request.form['time'] if request.method == 'POST' else '' }}" required></td>
+                </tr>
+
+            </table><br>
+            <button type="submit">Predict</button>
+        </form>
+        {% if predicted_class %}
+        <h2>The person is {{ predicted_class }}</h2>
+        {% endif %}
+    </div>
+</body>
+</html>
